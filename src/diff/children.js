@@ -368,6 +368,14 @@ function insert(parentVNode, oldDom, parentDom) {
 
 		return oldDom;
 	} else if (parentVNode._dom != oldDom) {
+		if (oldDom && oldDom.parentNode !== parentDom) {
+			console.error(
+				'insertBefore exception:',
+				parentDom,
+				parentVNode._dom,
+				oldDom
+			);
+		}
 		parentDom.insertBefore(parentVNode._dom, oldDom || null);
 		oldDom = parentVNode._dom;
 	}
