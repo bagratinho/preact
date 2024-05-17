@@ -368,15 +368,19 @@ function insert(parentVNode, oldDom, parentDom) {
 
 		return oldDom;
 	} else if (parentVNode._dom != oldDom) {
-		if (oldDom && oldDom.parentNode !== parentDom) {
-			console.error(
-				'insertBefore exception:',
-				parentDom,
-				parentVNode._dom,
-				oldDom
-			);
+		try {
+			parentDom.insertBefore(parentVNode._dom, oldDom || null);
+		} catch (e) {
+			let parent = parentDom;
+			let domTree = '';
+			while (parent) {
+				domTree = `${parent.tagName}.${parent.className}
+					${domTree}`;
+				parent = parent.parentNode;
+			}
+			console.error('insertBefore exception:', domTree);
+			throw e;
 		}
-		parentDom.insertBefore(parentVNode._dom, oldDom || null);
 		oldDom = parentVNode._dom;
 	}
 
